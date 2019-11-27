@@ -1,4 +1,5 @@
 import tempfile
+import logging
 import werkzeug
 import numpy as np
 
@@ -12,6 +13,12 @@ from flask_restful import reqparse, abort, Api, Resource
 
 
 BASE_URL = '/license-plate-recognition/api/v1.0/'
+
+app = Flask(__name__)
+
+file_handler = logging.FileHandler('app.log')
+app.logger.addHandler(file_handler)
+app.logger.setLevel(logging.INFO)
 
 
 class LicensePlateRecognition(Resource):
@@ -36,6 +43,9 @@ class LicensePlateRecognition(Resource):
             if not result:
                 return {'no license plate'}, 417
 
+            print(dir(img_file))
+            app.logger.info('image: {} license plate recognition size {}'.format(img_file.filename, len(result)))
+
 #            frame = cv2.imread(file.name)
 
             res = []
@@ -58,9 +68,6 @@ class LicensePlateRecognition(Resource):
         
         
 if __name__ == '__main__':
-    app = Flask(__name__)
     api = Api(app)
-
     api.add_resource(LicensePlateRecognition, BASE_URL + 'detect')
-
     app.run(host='0.0.0.0', debug=True)

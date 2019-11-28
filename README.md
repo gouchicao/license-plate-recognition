@@ -18,6 +18,7 @@ $ sudo docker run -it -p 5000:5000 license-plate-recognition:latest
 ```
 
 ## 测试车牌识别
+* Python测试代码
 ```py
 import os
 import requests
@@ -29,10 +30,16 @@ API_URL = 'http://localhost:5000/license-plate-recognition/api/v1.0/'
 def detect(filename):
     files = {'file': (filename, open(filename, 'rb'), 'image/png', {})}
     response = requests.post(API_URL + "detect", files=files)
-    print('response text>\n', response.text)
+    return response.json()
 
 if __name__ == '__main__':
-    detect('images/2.jpg')
+    json = detect('images/2.jpg')
+    print('response json>\n', json)
+```
+
+* curl测试
+```bash
+$ curl -v -X POST -H "Content-Type: multipart/form-data" -F "file=@test.jpg" http://127.0.0.1:5000/license-plate-recognition/api/v1.0/detect
 ```
 
 ## 测试效果
@@ -46,7 +53,7 @@ if __name__ == '__main__':
             "w": 207,
             "h": 54
         },
-        "object": "\u8fbdASB886",
+        "object": "辽ASB886",
         "confidence": 0.9705592223576137
     }
 ]

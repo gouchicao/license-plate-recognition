@@ -50,7 +50,6 @@ class LicensePlateRecognition(Resource):
 
             res = []
             for item in result:
-                print(item[0])
                 det_obj = {}
                 print(item[2])
                 rect = item[2]
